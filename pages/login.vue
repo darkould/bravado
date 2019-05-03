@@ -1,78 +1,89 @@
-<template>
-  <div class="container">
-    <h1>Please login to see the secret content</h1>
-    <form v-if="!$store.state.authUser" @submit.prevent="login">
-      <p v-if="formError" class="error">{{ formError }}</p>
-      <p>
-        <i>
-          To login, use
-          <b>demo</b> as username and
-          <b>demo</b> as password.
-        </i>
-      </p>
-      <p>
-        Username:
-        <input v-model="formUsername" type="text" name="username">
-      </p>
-      <p>
-        Password:
-        <input v-model="formPassword" type="password" name="password">
-      </p>
-      <button type="submit">Login</button>
-    </form>
-    <div v-else>
-      Hello {{ $store.state.authUser.username }}!
-      <pre>I am the secret content, I am shown only when the use is connected.</pre>
-      <p>
-        <i>You can also refresh this page, you'll still be connected!</i>
-      </p>
-      <button @click="logout">Logout</button>
-    </div>
-    <p>
-      <NuxtLink to="/secret">Super secret page</NuxtLink>
-    </p>
-  </div>
-</template>
+    <template>
+        <div>
+           <b-container id="login">
+            <p id="mainheader">BRAVADO</p>
+            <nuxt-link to="/">Homepage</nuxt-link>
+            <b-col md="6">
+            <b-form @submit="OnSubmit" v-if="show">
+              <p id="header" class="text-center">LOGIN</p>
+               
+                <b-form-group id="input-group-1" label="Mail Address:" label-for="email">
+                     <b-form-input
+                     id="input-email-login"
+                     v-model="login.email"
+                     type="text" 
+                     required
+                  placeholder="Enter Your Mail Address"
+                     ></b-form-input>
+                </b-form-group>
 
-<script>
-export default {
-  data() {
-    return {
-      formError: null,
-      formUsername: '',
-      formPassword: ''
-    }
-  },
-  methods: {
-    async login() {
-      try {
-        await this.$store.dispatch('login', {
-          username: this.formUsername,
-          password: this.formPassword
-        })
-        this.formUsername = ''
-        this.formPassword = ''
-        this.formError = null
-      } catch (e) {
-        this.formError = e.message
-      }
+    
+          <b-form-group id="input-group-2" label="Password:" label-for="input-pw1">
+                <b-form-input
+                  id="input-pw"
+                  v-model="login.password"
+                  type="password"
+                  required
+                  placeholder="Enter Password"
+                ></b-form-input>
+              </b-form-group>
+
+                   <b-button type="submit" variant="primary">Login</b-button>
+                   <router-link to="/pages/register.vue" >
+                   <b-button type="button" variant="outline-info">Register</b-button>
+                   </router-link>
+                   
+              
+              </b-form>
+                </b-col>
+                
+            </b-container>
+            </div>
+    
+    </template>
+    <script>
+    export default {
+      data () {
+        return {
+          login:{
+            email: '',
+            password: '',
+            submitted: false
+          },
+           show: true
+        }
     },
-    async logout() {
-      try {
-        await this.$store.dispatch('logout')
-      } catch (e) {
-        this.formError = e.message
-      }
+    computed: {
+        //...mapState('account', ['status'])
+    },
+    
+    methods: {
+        //...mapActions('account', ['login', 'logout']),
+        handleSubmit (e) {
+            this.submitted = true;
+            const { email, password } = this;
+            if (email && password) {
+                this.login({ email, password })
+            }
+        }
     }
-  }
+};
+    
+    </script>
+    
+    <style>
+#mainheader {
+  font-size: 50px;
+  text-align: center;
+  background-color: lightblue;
+  color: black;
+  padding: 40px;
 }
-</script>
+#header {
+  font-size: 30px;
+  text-align: center;
 
-<style>
-.container {
-  padding: 100px;
-}
-.error {
-  color: red;
+  color: black;
+  padding: 10px;
 }
 </style>
