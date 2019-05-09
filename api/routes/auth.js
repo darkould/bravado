@@ -1,11 +1,11 @@
 import validator from 'validator';
 
-export default function(router) {
-  router.post('/login', (req, res) => {
+export default function (router) {
+  router.post('/auth/login', (req, res) => {
     // Login function
   })
 
-  router.post('/logout', (req, res) => {
+  router.post('/auth/logout', (req, res) => {
     delete req.session.authUser
     res.json({
       ok: true
@@ -13,12 +13,23 @@ export default function(router) {
     // Logout function
   })
 
-  router.post('/register', (req, res) => {
+  router.post('/auth/register', (req, res) => {
     if (!validator.isEmail(req.body.email))
+      res.json({
+        status: 'error',
+        key: 'email',
+        msg: 'Email is not valid'
+      })
+    if (req.body.password !== req.body.password2)
+      res.json({
+        status: 'error',
+        key: 'password',
+        msg: 'passwords are not matched'
+      })
     res.json({
-      status: 'error',
-      key: 'email',
-      msg: 'Email is not valid'
+      status: 'success',
+      msg: 'success'
     })
+
   })
 }
